@@ -1,0 +1,35 @@
+substitutions:
+  device_name: meat-fan
+
+esphome:
+  name: ${device_name}
+
+# Specify hardware type
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Connect to WiFi
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # Setup Access Point when the WiFi network is unavailable
+  ap:
+    ssid: ${device_name}
+    password: !secret ap_password
+
+captive_portal:
+    
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Enable over-the-air updating
+ota:
+
+# Enable web application http://meat-fan.local
+web_server:
+  port: 80
