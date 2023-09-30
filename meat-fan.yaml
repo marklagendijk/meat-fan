@@ -36,7 +36,7 @@ web_server:
 
 # Communication bus for temp sensor
 spi:
-  id: temp1_spi
+  id: temperature1_spi
   miso_pin: GPIO5
   clk_pin: GPIO18
 
@@ -44,8 +44,8 @@ sensor:
   # Fan speed sensor (PWM input)
   - platform: pulse_counter
     pin: GPIO2
+    id: fan1_speed_sensor
     name: Fan Speed
-    id: fan_pulse
     unit_of_measurement: 'RPM'
     filters:
       - multiply: 0.5
@@ -56,20 +56,36 @@ sensor:
 
   # Temperature sensor
   - platform: max31855
+    id: temperature1_sensor
     name: "BBQ Temperature"
     cs_pin: GPIO19
     update_interval: 5s
-    spi_id: temp1_spi
+    spi_id: temperature1_spi
 
 output:
   # Fan speed control (PWM output)
   - platform: ledc
     pin: GPIO1
     frequency: 10000 Hz
-    id: fan_pwm
+    id: fan1_speed_control
 
-fan:
-  # Fan component
-  - platform: speed
-    output: fan_pwm
-    name: "Fan"
+# fan:
+#   - platform: speed
+#     output: fan1_speed_control
+#     name: "Fan"
+
+climate:
+  # PID temperature controller
+  - platform: pid
+    name: "BBQ Temperature Controller"
+    sensor: temperature1_sensor
+    default_target_temperature: 110°C
+    visual:
+      min_temperature: 0°C
+      max_temperature: 300°C
+      temperature_step: 5°C
+    heat_output: fan1_speed_control
+    control_parameters:
+      kp: 0.49460
+      ki: 0.00487
+      kd: 0
