@@ -6,7 +6,7 @@ esphome:
 
 # Specify hardware type
 esp32:
-  board: esp32dev
+  board: esp32doit-devkit-v1
   framework:
     type: arduino
 
@@ -33,3 +33,43 @@ ota:
 # Enable web application http://meat-fan.local
 web_server:
   port: 80
+
+# Communication bus for temp sensor
+spi:
+  id: temp1_spi
+  miso_pin: GPIO5
+  clk_pin: GPIO18
+
+sensor:
+  # Fan speed sensor (PWM input)
+  - platform: pulse_counter
+    pin: GPIO2
+    name: Fan Speed
+    id: fan_pulse
+    unit_of_measurement: 'RPM'
+    filters:
+      - multiply: 0.5
+    count_mode:
+      rising_edge: INCREMENT
+      falling_edge: DISABLE
+    update_interval: 3s
+
+  # Temperature sensor
+  - platform: max31855
+    name: "BBQ Temperature"
+    cs_pin: GPIO19
+    update_interval: 5s
+    spi_id: temp1_spi
+
+output:
+  # Fan speed control (PWM output)
+  - platform: ledc
+    pin: GPIO1
+    frequency: 10000 Hz
+    id: fan_pwm
+
+fan:
+  # Fan component
+  - platform: speed
+    output: fan_pwm
+    name: "Fan"
