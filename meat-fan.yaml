@@ -81,9 +81,11 @@ climate:
     sensor: temperature1_sensor
     default_target_temperature: 110°C
     visual:
-      min_temperature: 0°C
-      max_temperature: 300°C
-      temperature_step: 5°C
+      min_temperature: 0
+      max_temperature: 300
+      temperature_step:
+        target_temperature: 5
+        current_temperature: .1
     heat_output: fan1_speed_control
     control_parameters:
       kp: 0.49460
