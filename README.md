@@ -17,3 +17,8 @@ BBQ Thermometer design [with ESPHome firmware](meat-temp.yaml)
     - Meat probe (100k Ohm at 25°C)
     - Resistor (100k Ohm)
     - 0.1uF capacitor (for reducing noise on the ADC pin)
+
+## Circuit
+[Circuit Diagram Edititor](https://www.circuit-diagram.org/editor/c/9313d815a8be4280a69bf171004afa7a)
+
+![Circuit](circuit.png)
