@@ -22,3 +22,7 @@ BBQ Thermometer design [with ESPHome firmware](meat-temp.yaml)
 [Circuit Diagram Edititor](https://www.circuit-diagram.org/editor/c/9313d815a8be4280a69bf171004afa7a)
 
 [![Circuit](meat-temp-circuit.png)](https://www.circuit-diagram.org/editor/c/9313d815a8be4280a69bf171004afa7a)
+
+## Assembly
+- You can use any of the [ADC1 pins](https://esphome.io/components/sensor/adc.html#esp32-pins) for the Meat probes.
+- You can use any GPIO pin for the 3 pins connecting to the MAX31855.
