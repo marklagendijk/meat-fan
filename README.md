@@ -21,4 +21,4 @@ BBQ Thermometer design [with ESPHome firmware](meat-temp.yaml)
 ## Circuit
 [Circuit Diagram Edititor](https://www.circuit-diagram.org/editor/c/9313d815a8be4280a69bf171004afa7a)
 
-![Circuit](circuit.png)
+[![Circuit](circuit.png)](https://www.circuit-diagram.org/editor/c/9313d815a8be4280a69bf171004afa7a)
