@@ -11,7 +11,7 @@ BBQ Thermometer design [with ESPHome firmware](meat-temp.yaml)
 - PCB board (5 x 7cm or bigger)
 - 15 pin female header (2 times). Optional, but allows for easy replacing and detaching the ESP.
 - Thermocouple (k-type) hardware 
-    - MAX31855 thermocouple (k-type) board
+    - MAX31855 thermocouple board
     - Thermocouple (k-type)
 - Meat probe (thermistor) hardware
     - Meat probe (100k Ohm at 25°C)
