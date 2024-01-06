@@ -1,0 +1,140 @@
+substitutions:
+  device_name: meat-temp
+  id_prefix: meat_temp
+  friendly_name: Meat Temp
+
+esphome:
+  friendly_name: ${friendly_name} 
+  name: ${device_name}
+  comment: The ultimate DIY BBQ Thermometer!
+  project: 
+    name: "marklagendijk.meat-temp"
+    version: "0.6.0"
+
+# Specify hardware type
+esp32:
+  board: nodemcu-32s
+  framework:
+    type: arduino
+
+# Connect to WiFi
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # Setup Access Point when the WiFi network is unavailable
+  ap:
+    ssid: ${device_name}
+    password: !secret ap_password
+
+captive_portal:
+    
+# Enable logging
+logger:
+  level: INFO
+
+# Enable Home Assistant API
+api:
+
+# Enable over-the-air updating
+ota:
+
+# Enable web application http://meat-temp.local
+web_server:
+  port: 80
+
+# Communication bus for MAX31855
+spi:
+  miso_pin: GPIO23
+  clk_pin: GPIO21
+  interface: spi3
+
+sensor:
+# Thermocouple temperature sensor using MAX31855
+  - platform: max31855
+    id: temperature_sensor
+    name: BBQ Temperature
+    cs_pin: GPIO22
+    update_interval: 30s
+    # filters:
+    #   - calibrate_linear:
+    #      method: least_squares
+    #      datapoints:
+    #       - 16 -> 20
+    #       - 35 -> 40
+    #       - 54 -> 60
+    #       - 73 -> 80
+    reference_temperature: 
+      id: ${id_prefix}internal_temperature
+      name: Internal Temperature
+  
+
+# Meat probe (thermistor) temperature sensor 1
+  - platform: ntc
+    id: ${id_prefix}meat_temperature1
+    sensor: ${id_prefix}resistance_sensor1
+    # calibration:
+    #   b_constant: 3950
+    #   reference_temperature: 25°C
+    #   reference_resistance: 100kOhm
+    calibration:
+      - 159.3848kOhm -> 15°C
+      - 35.6021kOhm -> 50°C
+      - 13.2316kOhm -> 75°C    
+    name: Meat Temperature 1
+    filters: 
+    # When the probe is disconnected we see low temperatures.
+    # Replace these with 'NAN' so it does not mess up graphs  
+    - lambda: !lambda |-
+        if (x < 0) return NAN;
+        return x;
+    - skip_initial: 10
+    - sliding_window_moving_average:
+        window_size: 15
+        send_every: 30
+
+  - platform: resistance
+    id: ${id_prefix}resistance_sensor1
+    sensor: ${id_prefix}resistance_source_sensor1
+    configuration: DOWNSTREAM
+    resistor: 100kOhm
+    name: Resistance Sensor 1
+  
+  - platform: adc
+    id: ${id_prefix}resistance_source_sensor1
+    pin: GPIO34
+    update_interval: 1s
+    attenuation: 11db 
+
+
+# Meat probe (thermistor) temperature sensor 2
+  - platform: ntc
+    id: ${id_prefix}meat_temperature2
+    sensor: ${id_prefix}resistance_sensor2
+    calibration:
+      - 159.3848kOhm -> 15°C
+      - 35.6021kOhm -> 50°C
+      - 13.2316kOhm -> 75°C    
+    name: Meat Temperature 2
+    filters: 
+    # When the probe is disconnected we see low temperatures.
+    # Replace these with 'NAN' so it does not mess up graphs  
+    - lambda: !lambda |-
+        if (x < 0) return NAN;
+        return x;
+    - skip_initial: 10
+    - sliding_window_moving_average:
+        window_size: 15
+        send_every: 30
+
+  - platform: resistance
+    id: ${id_prefix}resistance_sensor2
+    sensor: ${id_prefix}resistance_source_sensor2
+    configuration: DOWNSTREAM
+    resistor: 100kOhm
+    name: Resistance Sensor 2
+  
+  - platform: adc
+    id: ${id_prefix}resistance_source_sensor2
+    pin: GPIO35
+    update_interval: 1s
+    attenuation: 11db 
