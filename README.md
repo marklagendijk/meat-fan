@@ -19,7 +19,7 @@ BBQ Thermometer design [with ESPHome firmware](meat-temp.yaml)
     - 0.1uF capacitor (for reducing noise on the ADC pin)
 
 ## Circuit
-[Circuit Diagram Edititor](https://www.circuit-diagram.org/editor/c/9313d815a8be4280a69bf171004afa7a)
+[Circuit Diagram Editor](https://www.circuit-diagram.org/editor/c/9313d815a8be4280a69bf171004afa7a)
 
 [![Circuit](meat-temp-circuit.png)](https://www.circuit-diagram.org/editor/c/9313d815a8be4280a69bf171004afa7a)
 
