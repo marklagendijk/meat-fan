@@ -51,10 +51,10 @@ spi:
 sensor:
 # Thermocouple temperature sensor using MAX31855
   - platform: max31855
-    id: temperature_sensor
+    id: ${id_prefix}bbq_temperature
     name: BBQ Temperature
     cs_pin: GPIO22
-    update_interval: 30s
+    update_interval: 1s
     # filters:
     #   - calibrate_linear:
     #      method: least_squares
@@ -63,10 +63,25 @@ sensor:
     #       - 35 -> 40
     #       - 54 -> 60
     #       - 73 -> 80
+    filters:
+    - sliding_window_moving_average:
+        send_every: 15
+        window_size: 15
+        send_first_at: 5
     reference_temperature: 
-      id: ${id_prefix}internal_temperature
-      name: Internal Temperature
+      id: ${id_prefix}device_temperature_source
   
+  - platform: copy
+    source_id: ${id_prefix}device_temperature_source
+    id: ${id_prefix}device_temperature
+    name: Device Temperature
+    accuracy_decimals: 1
+    filters:
+    - sliding_window_moving_average:
+        send_every: 15
+        window_size: 15
+        send_first_at: 5
+        
 
 # Meat probe (thermistor) temperature sensor 1
   - platform: ntc
@@ -87,23 +102,23 @@ sensor:
     - lambda: !lambda |-
         if (x < 0) return NAN;
         return x;
-    - skip_initial: 10
-    - sliding_window_moving_average:
-        window_size: 15
-        send_every: 30
 
   - platform: resistance
     id: ${id_prefix}resistance_sensor1
     sensor: ${id_prefix}resistance_source_sensor1
     configuration: DOWNSTREAM
     resistor: 100kOhm
-    name: Resistance Sensor 1
   
   - platform: adc
     id: ${id_prefix}resistance_source_sensor1
     pin: GPIO34
-    update_interval: 1s
-    attenuation: 11db 
+    update_interval: 0.01s
+    attenuation: auto 
+    filters: 
+    - sliding_window_moving_average:
+        send_every: 1500
+        window_size: 1500
+        send_first_at: 500
 
 
 # Meat probe (thermistor) temperature sensor 2
@@ -121,20 +136,20 @@ sensor:
     - lambda: !lambda |-
         if (x < 0) return NAN;
         return x;
-    - skip_initial: 10
-    - sliding_window_moving_average:
-        window_size: 15
-        send_every: 30
 
   - platform: resistance
     id: ${id_prefix}resistance_sensor2
     sensor: ${id_prefix}resistance_source_sensor2
     configuration: DOWNSTREAM
     resistor: 100kOhm
-    name: Resistance Sensor 2
   
   - platform: adc
     id: ${id_prefix}resistance_source_sensor2
     pin: GPIO35
-    update_interval: 1s
-    attenuation: 11db 
+    update_interval: 0.01s
+    attenuation: auto 
+    filters:
+    - sliding_window_moving_average:
+        send_every: 1500
+        window_size: 1500
+        send_first_at: 500
